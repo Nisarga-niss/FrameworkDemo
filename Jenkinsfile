@@ -12,7 +12,7 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 bat '''
-                python -m venv venv
+                py -m venv venv
                 '''
             }
         }
@@ -20,9 +20,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 bat '''
-                call venv\\Scripts\\activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                venv\\Scripts\\python -m pip install --upgrade pip
+                venv\\Scripts\\python -m pip install -r requirements.txt
                 '''
             }
         }
@@ -30,8 +29,7 @@ pipeline {
         stage('Run All Tests') {
             steps {
                 bat '''
-                call venv\\Scripts\\activate
-                pytest tests --alluredir=reports\\allure-results
+                venv\\Scripts\\python -m pytest tests --alluredir=reports\\allure-results
                 '''
             }
         }
