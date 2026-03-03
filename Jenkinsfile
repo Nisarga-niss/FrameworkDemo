@@ -9,31 +9,20 @@ pipeline {
             }
         }
 
-        stage('Find Python Path') {
-            steps {
-                script {
-                    def pythonPath = bat(
-                        script: 'where python',
-                        returnStdout: true
-                    ).trim()
-
-                    env.PYTHON_PATH = pythonPath.split("\r\n")[0]
-                    echo "Python path is: ${env.PYTHON_PATH}"
-                }
-            }
-        }
-
         stage('Create Virtual Environment') {
             steps {
-                bat "\"${env.PYTHON_PATH}\" -m venv venv"
+                bat '''
+                python -m venv venv
+                '''
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 bat '''
-                venv\\Scripts\\python -m pip install --upgrade pip
-                venv\\Scripts\\python -m pip install -r requirements.txt
+                call venv\\Scripts\\activate
+                pip install --upgrade pip
+                pip install -r requirements.txt
                 '''
             }
         }
@@ -41,7 +30,8 @@ pipeline {
         stage('Run All Tests') {
             steps {
                 bat '''
-                venv\\Scripts\\python -m pytest tests --alluredir=reports\\allure-results
+                call venv\\Scripts\\activate
+                pytest tests --alluredir=reports\\allure-results
                 '''
             }
         }
