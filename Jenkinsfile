@@ -9,11 +9,23 @@ pipeline {
             }
         }
 
+        stage('Find Python Path') {
+            steps {
+                script {
+                    def pythonPath = bat(
+                        script: 'where python',
+                        returnStdout: true
+                    ).trim()
+
+                    env.PYTHON_PATH = pythonPath.split("\r\n")[0]
+                    echo "Python path is: ${env.PYTHON_PATH}"
+                }
+            }
+        }
+
         stage('Create Virtual Environment') {
             steps {
-                bat '''
-                py -m venv venv
-                '''
+                bat "\"${env.PYTHON_PATH}\" -m venv venv"
             }
         }
 
