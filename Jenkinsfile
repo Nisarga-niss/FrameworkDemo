@@ -40,6 +40,7 @@ pipeline {
             steps {
                 allure includeProperties: false,
                        jdk: '',
+                       commandline: 'allure',
                        results: [[path: 'reports/allure-results']]
             }
         }
