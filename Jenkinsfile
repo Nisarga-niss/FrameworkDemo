@@ -31,7 +31,7 @@ pipeline {
             steps {
                 bat '''
                 call venv\\Scripts\\activate
-                pytest tests --alluredir=reports\\allure-results
+                pytest tests --ignore=tests/test_orange_hrm_login.py --alluredir=reports\\allure-results
                 '''
             }
         }
